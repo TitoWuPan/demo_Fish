@@ -38,16 +38,14 @@ def main():
     st.write(df)
 
     if st.button('RUN'):
-        
-        pred_lin_reg = clase_map[abs(lin_reg.predict(df).round().astype(int)[0])]
-        pred_svc = clase_map[svc.predict(df)[0]]
-        pred_log_reg = clase_map[log_reg.predict(df)[0]]
-    
         if model == 'Linear Regression':
+            pred_lin_reg = clase_map[abs(lin_reg.predict(df).round().astype(int)[0])]
             st.write(f"**Regresión Lineal Predice:** {pred_lin_reg}")
         elif model == 'Logistic Regression':
+            pred_svc = clase_map[svc.predict(df)[0]]
             st.write(f"**SVC Predice:** {pred_svc}")
         else:
+           pred_log_reg = clase_map[log_reg.predict(df)[0]]
            st.write(f"**Regresión Logística Predice:** {pred_log_reg}")
 
 
