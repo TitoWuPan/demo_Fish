@@ -20,27 +20,36 @@ clase_map = {
     8: 'Setipinna taty',
     9: 'Sillaginopsis panijus',
 }
-  
-# Crear la interfaz de Streamlit
-st.title("Aplicación de Clasificación de Especies")
 
-# Entrada del usuario
-st.header("Ingrese los valores para clasificar la especie")
-length = st.number_input("Longitud", min_value=0.0, step=0.1)
-weight = st.number_input("Peso", min_value=0.0, step=0.1)
-w_l_ratio = st.number_input("Relación Peso-Longitud", min_value=0.0, step=0.01)
+def main():
+    st.title('Aplicación de Clasificación de Especies')
+    st.sidebar.header('Ingrese los valores para clasificar la especie')
+    def user_input_parameters():
+        length = st.sidebar.slider('Length', 6.36, 7.9, 33.86)
+        weight = st.sidebar.slider('Weight', 2.05, 4.4, 6.29)
+        w_l_ratio = st.sidebar.slider('w_l_ratio', 0.08, 0.32, 0.64)  
+        features = np.array([[length, weight, w_l_ratio]])
+        return features
 
-# Botón de predicción
-if st.button("Predecir"):
-    input_data = np.array([[length, weight, w_l_ratio]])
+    df = user_input_parameters()
+    option = ['Linear Regression', 'Logistic Regression', 'SVM']
+    model = st.sidebar.selectbox('Which model you like to use?', option)
+    st.subheader(model)
+    st.write(df)
 
-    # Predicciones con los modelos y mapeo al nombre de la clase
-    pred_lin_reg = clase_map[lin_reg.predict(input_data).round().astype(int)[0]]
-    pred_svc = clase_map[svc.predict(input_data)[0]]
-    pred_log_reg = clase_map[log_reg.predict(input_data)[0]]
+    if st.button('RUN'):
+        
+        pred_lin_reg = clase_map[abs(lin_reg.predict(df).round().astype(int)[0])]
+        pred_svc = clase_map[svc.predict(df)[0]]
+        pred_log_reg = clase_map[log_reg.predict(df)[0]]
+    
+        if model == 'Linear Regression':
+            st.write(f"**Regresión Lineal Predice:** {pred_lin_reg}")
+        elif model == 'Logistic Regression':
+            st.write(f"**SVC Predice:** {pred_svc}")
+        else:
+           st.write(f"**Regresión Logística Predice:** {pred_log_reg}")
 
-    # Mostrar resultados
-    st.subheader("Resultados de las Predicciones")
-    st.write(f"**Regresión Lineal Predice:** {pred_lin_reg}")
-    st.write(f"**SVC Predice:** {pred_svc}")
-    st.write(f"**Regresión Logística Predice:** {pred_log_reg}")
+
+if __name__ == '__main__':
+    main()
